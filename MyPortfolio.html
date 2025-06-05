@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jade's Portfolio</title>
+  <style>
+    /* ======= CSS Inlined ======= */
+
+    /* Base styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images7.alphacoders.com/135/1350454.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #ddd;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      box-shadow: 0 0 30px rgba(30,30,47,0.7);
+      border-radius: 12px;
+      position: relative; /* for stacking context */
+      overflow-x: hidden;
+    }
+
+    /* Headers */
+    h1, h2 {
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #f0f0f5;
+      text-shadow: 1px 1px 3px #7b7b9d;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #615ac4;
+      padding-bottom: 8px;
+    }
+
+    /* Paragraphs */
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+
+    /* Links */
+    a {
+      color: #8ab4f8;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px #8ab4f8;
+    }
+
+    /* Neon button */
+    .neon-button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 30px;
+      background: #615ac4;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 10px #8777e8, 0 0 20px #8777e8, 0 0 30px #8777e8;
+      transition: box-shadow 0.3s ease;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #b0aaff, 0 0 30px #b0aaff, 0 0 40px #b0aaff;
+      color: #fff;
+    }
+
+    /* Button styling */
+    button#greet-btn {
+      background: #615ac4;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(97, 90, 196, 0.6);
+      transition: background 0.3s ease, transform 0.2s ease;
+      letter-spacing: 1.2px;
+    }
+
+    button#greet-btn:hover {
+      background: #8777e8;
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(135, 119, 232, 0.9);
+    }
+
+    button#greet-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 3px 10px rgba(97, 90, 196, 0.8);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #999;
+      letter-spacing: 0.1em;
+    }
+
+    /* Fun stuff message */
+    #message {
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #a5d6ff;
+      text-shadow: 0 0 6px #8ab4f8;
+    }
+
+    /* Section spacing */
+    section {
+      padding-bottom: 10px;
+    }
+
+    /* Rain canvas styles */
+    #rain-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Content above canvas */
+    body > *:not(#rain-canvas) {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Rain Canvas -->
+  <canvas id="rain-canvas"></canvas>
+
+  <header>
+    <h1>Hey, I'm Jade</h1>
+    <p>Junior dev & aspiring coder 🚀</p>
+  </header>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>
+      I'm a focused learner escaping the noise of the world to master coding and build real projects.  
+      I’m curious as hell, always tinkering, learning new tricks, and yeah, sometimes getting some AI help (but who doesn’t these days, right?). I’m leveling up daily.
+    </p>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <p>Coming soon... stay tuned!</p>
+  </section>
+
+  <section id="fun-stuff">
+    <h2>Fun Stuff</h2>
+    <button id="greet-btn">Click me!</button>
+    <p id="message"></p>
+    <p>
+      <a href="https://www.webnovel.com/book/backrooms-no-exit_29143630108328705" target="_blank" class="neon-button">Read my Webnovel →</a>
+    </p>
+  </section>
+
+  <footer>
+    <p>
+      Find me on 
+      <a href="https://github.com/pmjade/pmjade" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+      <a href="https://www.linkedin.com/in/aki-shinichi-715594354" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </p>
+  </footer>
+
+  <script>
+    // Rain canvas script
+    const canvas = document.getElementById("rain-canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+    });
+
+    const drops = [];
+    const numDrops = 300;
+
+    for (let i = 0; i < numDrops; i++) {
+      drops.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        length: Math.random() * 20 + 10,
+        speed: Math.random() * 5 + 5,
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "rgba(174,194,224,0.5)";
+      ctx.lineWidth = 1;
+      ctx.lineCap = "round";
+
+      for (let i = 0; i < drops.length; i++) {
+        const d = drops[i];
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x, d.y + d.length);
+        ctx.stroke();
+        d.y += d.speed;
+        if (d.y > canvas.height) {
+          d.y = -20;
+          d.x = Math.random() * canvas.width;
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    // Welcome alert
+    window.onload = function() {
+      alert('Welcome to my portfolio! Let’s build cool stuff 😎');
+    }
+
+    // Button to change message text
+    const button = document.getElementById('greet-btn');
+    const message = document.getElementById('message');
+
+    button.addEventListener('click', () => {
+      message.textContent = 'Have a nice day 🙌 My YouTube channel: @jade_pm';
+    });
+  </script>
+</body>
+</html>
+
