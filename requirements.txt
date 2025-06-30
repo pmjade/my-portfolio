@@ -1,2 +1,2 @@
-python
-serpapi
+flask
+serpapi==0.1.5
