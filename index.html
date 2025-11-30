@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta-name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jade's Novel Forge ✨</title>
   <style>
     body {
@@ -11,32 +11,37 @@
       background-size: cover;
       color: #f7e9b5;
       text-shadow: 0 0 8px #ffd27f;
-      max-width: 900px;
-      margin: 40px auto;
       padding: 30px;
-      box-shadow: 0 0 40px rgba(255, 215, 128, 0.3);
-      border-radius: 16px;
-      position: relative;
-      overflow-x: hidden;
+    }
+
+    /* 🔵 Transparent centered container */
+    .main-box {
+      max-width: 820px;     /* reduced from full page */
+      margin: 40px auto;    /* center on screen */
+      padding: 30px;
+      background: rgba(20, 20, 40, 0.55);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(255, 215, 128, 0.25);
     }
 
     h1 {
       font-size: 2.8rem;
       text-align: center;
-      letter-spacing: 2px;
       margin-bottom: 30px;
       color: #ffe9a3;
       text-shadow: 0 0 10px gold;
     }
 
+    /* ✏️ Chapter boxes — narrower + centered */
     .chapter-box {
+      width: 90%;                /* was 100% — now smaller */
+      max-width: 650px;          /* clean width */
+      margin: 0 auto 25px auto;  /* centered */
       background: rgba(20, 20, 40, 0.7);
       border: 1px solid rgba(255, 215, 128, 0.4);
       border-radius: 14px;
       padding: 20px;
-      margin-bottom: 25px;
       box-shadow: 0 0 15px rgba(255, 215, 128, 0.25);
-      position: relative;
     }
 
     label {
@@ -56,7 +61,6 @@
       margin-top: 6px;
       font-size: 1.05rem;
       box-shadow: inset 0 0 8px rgba(255, 215, 128, 0.3);
-      text-shadow: 0 0 6px #f9c76a;
     }
 
     textarea {
@@ -69,7 +73,6 @@
       margin-top: 8px;
       font-size: 0.95rem;
       color: #ffedb3;
-      text-shadow: 0 0 6px #f9c76a;
     }
 
     .chapter-actions {
@@ -78,7 +81,6 @@
     }
 
     .btn {
-      display: inline-block;
       background: linear-gradient(90deg, #e4b95b, #ffecb3);
       border: none;
       color: #382d00;
@@ -87,32 +89,21 @@
       cursor: pointer;
       font-weight: 700;
       box-shadow: 0 0 10px rgba(255, 215, 128, 0.5);
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
       margin-left: 8px;
-    }
-
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
     }
 
     #add-chapter {
       display: block;
       margin: 30px auto;
       background: linear-gradient(90deg, #b98bff, #d9b8ff);
-      color: #1d1336;
-      font-weight: 700;
       padding: 12px 26px;
       border-radius: 40px;
-      box-shadow: 0 0 20px rgba(210, 180, 255, 0.6);
     }
 
     footer {
       text-align: center;
       color: #ddd;
-      font-size: 0.9rem;
       margin-top: 50px;
-      text-shadow: 0 0 6px #f9c76a;
     }
 
     #rain-canvas {
@@ -132,21 +123,25 @@
   </style>
 </head>
 <body>
+
   <canvas id="rain-canvas"></canvas>
 
-  <h1>🪶 Jade’s Novel Forge</h1>
+  <div class="main-box">
+    <h1>🪶 Jade’s Novel Forge</h1>
 
-  <div id="chapters"></div>
-  <button id="add-chapter">＋ Add Chapter</button>
+    <div id="chapters"></div>
 
-  <footer>© 2025 Jade — Write. Dream. Save.</footer>
+    <button id="add-chapter">＋ Add Chapter</button>
 
-  <!-- Libraries for PDF export -->
+    <footer>© 2025 Jade — Write. Dream. Save.</footer>
+  </div>
+
+  <!-- PDF libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
-    // === Rain effect ===
+    /* RAIN EFFECT */
     const canvas = document.getElementById("rain-canvas");
     const ctx = canvas.getContext("2d");
     function resizeCanvas() {
@@ -164,86 +159,81 @@
     function drawRain() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = "rgba(255,255,200,0.2)";
-      ctx.lineWidth = 1;
       for (let d of drops) {
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
         ctx.lineTo(d.x, d.y + d.length);
         ctx.stroke();
         d.y += d.speed;
-        if (d.y > canvas.height) {
-          d.y = -20;
-          d.x = Math.random() * canvas.width;
-        }
+        if (d.y > canvas.height) d.y = -20;
       }
       requestAnimationFrame(drawRain);
     }
     drawRain();
 
-    // === Novel forge logic ===
+    /* CHAPTER LOGIC */
     let chapterCount = 0;
     const chaptersDiv = document.getElementById("chapters");
     const { jsPDF } = window.jspdf;
 
-    function updateWordCount(chapterBox) {
-      const text = chapterBox.querySelector("textarea").value.trim();
-      const count = text ? text.split(/\s+/).length : 0;
-      chapterBox.querySelector(".wordcount").textContent = count + " words";
+    function updateWordCount(box) {
+      const t = box.querySelector("textarea").value.trim();
+      box.querySelector(".wordcount").textContent =
+        (t ? t.split(/\s+/).length : 0) + " words";
     }
 
     function createChapter() {
       chapterCount++;
       const box = document.createElement("div");
       box.className = "chapter-box";
+
       box.innerHTML = `
         <label>Chapter Number</label>
         <input type="text" value="${chapterCount}" class="chapter-number">
+
         <label>Chapter Title</label>
         <input type="text" placeholder="Untitled Chapter" class="chapter-title">
+
         <label>Content</label>
-        <textarea placeholder="Begin writing your golden tale..."></textarea>
+        <textarea placeholder="Begin your tale..."></textarea>
+
         <div class="stats">Word Count: <span class="wordcount">0</span></div>
+
         <div class="chapter-actions">
           <button class="btn save-btn">💾 Save as PDF</button>
           <button class="btn delete-btn">🗑 Delete</button>
         </div>
       `;
+
       chaptersDiv.appendChild(box);
 
-      const textarea = box.querySelector("textarea");
-      textarea.addEventListener("input", () => updateWordCount(box));
+      box.querySelector("textarea")
+         .addEventListener("input", () => updateWordCount(box));
+
+      box.querySelector(".delete-btn").addEventListener("click", () => box.remove());
 
       box.querySelector(".save-btn").addEventListener("click", async () => {
         const pdf = new jsPDF("p", "pt", "a4");
-        const scale = 2;
-
-        // Temporarily add a clone for rendering
         const clone = box.cloneNode(true);
         clone.style.width = "600px";
         clone.style.margin = "0 auto";
         document.body.appendChild(clone);
 
-        const canvasData = await html2canvas(clone, {
-          scale,
-          backgroundColor: null
-        });
-        const imgData = canvasData.toDataURL("image/png");
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = (canvasData.height * pageWidth) / canvasData.width;
-        pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
+        const canvasData = await html2canvas(clone, { scale: 2, backgroundColor: null });
+        const img = canvasData.toDataURL("image/png");
+        const pw = pdf.internal.pageSize.getWidth();
+        const ph = (canvasData.height * pw) / canvasData.width;
+        pdf.addImage(img, "PNG", 0, 0, pw, ph);
+
         const title = box.querySelector(".chapter-title").value || "Untitled";
         pdf.save(`Chapter_${chapterCount}_${title}.pdf`);
         clone.remove();
       });
-
-      box.querySelector(".delete-btn").addEventListener("click", () => {
-        box.remove();
-      });
     }
 
     document.getElementById("add-chapter").addEventListener("click", createChapter);
-    // Create one initial chapter on load
-    createChapter();
+
+    createChapter(); // initial
   </script>
 </body>
-</html>
+  </html>
